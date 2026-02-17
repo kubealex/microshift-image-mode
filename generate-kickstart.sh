@@ -11,7 +11,9 @@ if [ -f "$ENV_FILE" ]; then
   set +a
 fi
 
-cat > kickstart.ks <<EOF
+cat >> config.toml <<EOF
+[customizations.installer.kickstart]
+contents = """
 lang en_US.UTF-8
 keyboard us
 timezone UTC
@@ -50,6 +52,7 @@ EOF_PULL
 chmod 600 /etc/crio/openshift-pull-secret
 
 %end
+"""
 EOF
 
 echo "kickstart.ks generated successfully"
