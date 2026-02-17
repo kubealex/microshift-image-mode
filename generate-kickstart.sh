@@ -11,7 +11,7 @@ if [ -f "$ENV_FILE" ]; then
   set +a
 fi
 
-cat >> config.toml <<EOF
+cat > config.toml <<EOF
 [customizations.installer.kickstart]
 contents = """
 lang en_US.UTF-8

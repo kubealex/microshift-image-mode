@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # Auto-load .env or vars.env if present
 ENV_FILE="vars.env"

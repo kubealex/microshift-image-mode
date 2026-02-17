@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # Auto-load .env or vars.env if present
 ENV_FILE="vars.env"
@@ -19,6 +19,4 @@ sudo virt-install \
     --network network=${NETNAME},model=virtio \
     --events on_reboot=restart \
     --location /var/lib/libvirt/images/rhel-9.6-$(uname -m)-boot.iso \
-    --initrd-inject kickstart.ks \
-    --extra-args "inst.ks=file://kickstart.ks" \
     --wait
