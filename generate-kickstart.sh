@@ -20,6 +20,10 @@ timezone UTC
 text
 reboot
 
+user --name microshift --password redhat --plaintext --groups wheel
+sshkey --username <user> ssh-<type> <public key>
+rootpw --lock
+
 zerombr
 clearpart --all --initlabel
 reqpart --add-boot
