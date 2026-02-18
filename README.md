@@ -114,8 +114,6 @@ $(cat "$AUTH_CONFIG")
 EOF_AUTH
 %end
 
-ostreecontainer --url "${IMAGE_REF}"
-
 %post --log=/dev/console --erroronfail
 cat > /etc/crio/openshift-pull-secret <<'EOF_PULL'
 $(cat "$PULL_SECRET")
