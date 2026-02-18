@@ -158,7 +158,7 @@ sudo podman run \
   "${IMAGE_REF}"
 ```
 
-Output will be written to `./output/iso/disk.iso`.
+Output will be written to `./output/bootiso/install.iso`.
 
 ---
 
@@ -170,8 +170,8 @@ Give the ISO a descriptive name and copy it into the libvirt image store.
 ARCH=$(uname -m)
 ISO_NAME="rhel-9.6-${ARCH}-boot.iso"
 
-mv ./output/iso/disk.iso "./output/iso/${ISO_NAME}"
-sudo cp "./output/iso/${ISO_NAME}" "/var/lib/libvirt/images/${ISO_NAME}"
+mv ./output/bootiso/install.iso "./output/bootiso/${ISO_NAME}"
+sudo cp "./output/bootiso/${ISO_NAME}" "/var/lib/libvirt/images/${ISO_NAME}"
 ```
 
 ---
@@ -193,7 +193,7 @@ sudo virt-install \
     --disk path=/var/lib/libvirt/images/${VMNAME}.qcow2,size=20 \
     --network network="${NETNAME}",model=virtio \
     --events on_reboot=restart \
-    --location "${ISO_PATH}" \
+    --cdrom "${ISO_PATH}" \
     --wait
 ```
 

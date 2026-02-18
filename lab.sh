@@ -76,7 +76,7 @@ reqpart --add-boot
 
 part pv.01 --grow
 volgroup rhel pv.01
-logvol / --vgname=rhel --fstype=xfs --size=10240 --name=root
+logvol / --vgname=rhel --fstype=xfs --size=20480 --name=root
 
 network --bootproto=dhcp --device=link --activate --onboot=on
 
@@ -119,10 +119,10 @@ generate_iso() {
     "${IMAGE_REF}"
 
   info "Renaming ISO"
-  mv ./output/iso/disk.iso "./output/iso/${ISO_NAME}"
+  mv ./output/bootiso/install.iso "./output/bootiso/${ISO_NAME}"
 
   info "Copying ISO to ${ISO_PATH}"
-  sudo cp "./output/iso/${ISO_NAME}" "$ISO_PATH"
+  sudo cp "./output/bootiso/${ISO_NAME}" "$ISO_PATH"
 
   success "ISO ready at ${ISO_PATH}"
 }
@@ -134,10 +134,10 @@ create_vm() {
     --name "${VMNAME}" \
     --vcpus 2 \
     --memory 2048 \
-    --disk path=/var/lib/libvirt/images/${VMNAME}.qcow2,size=20 \
+    --disk path=/var/lib/libvirt/images/${VMNAME}.qcow2,size=30 \
     --network network="${NETNAME}",model=virtio \
     --events on_reboot=restart \
-    --location "${ISO_PATH}" \
+    --cdrom "${ISO_PATH}" \
     --wait
 
   success "VM ${VMNAME} created"
