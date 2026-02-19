@@ -56,3 +56,7 @@ EOF
 # ------------------------------------------------------------
 RUN systemctl enable microshift-make-rshared.service && \
     systemctl enable microshift
+
+    # Make the KUBECONFIG from MicroShift directly available for the root user
+RUN mkdir -p /var/roothome && \
+    echo -e 'export KUBECONFIG=/var/lib/microshift/resources/kubeadmin/kubeconfig' >> /var/roothome/.profile
