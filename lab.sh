@@ -130,8 +130,8 @@ create_vm() {
 
   sudo virt-install \
     --name "${VMNAME}" \
-    --vcpus 2 \
-    --memory 2048 \
+    --vcpus 8 \
+    --memory 8192 \
     --disk path=/var/lib/libvirt/images/${VMNAME}.qcow2,size=30 \
     --network network="${NETNAME}",model=virtio \
     --events on_reboot=restart \
