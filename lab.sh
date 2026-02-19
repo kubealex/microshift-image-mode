@@ -50,7 +50,7 @@ build_and_push_image() {
   sudo podman build -t "${IMAGE_REF}" .
 
   info "Pushing image ${IMAGE_REF}"
-  sudo podman push "${IMAGE_REF}"
+  sudo podman push "${IMAGE_REF}" --authfile auth.json
 
   success "Image built and pushed"
 }
