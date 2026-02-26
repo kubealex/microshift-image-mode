@@ -28,6 +28,10 @@ cat > vars.env <<EOF
 # Container image reference — replace <your-user> with your Quay.io username
 export IMAGE_REF=quay.io/<your-user>/microshift-4.21-bootc:latest
 
+# Environment vars
+ARCH=$(uname -m)
+ISO_PATH="/var/lib/libvirt/images/rhel-9.6-${ARCH}-boot.iso"
+
 # VM configuration
 export VMNAME=bootc-vm
 export NETNAME=default
@@ -53,8 +57,6 @@ source vars.env
 Log into both registries using the same `auth.json` file.
 
 ```bash
-source vars.env
-
 sudo podman login quay.io --authfile auth.json
 sudo podman login registry.redhat.io --authfile auth.json
 ```
@@ -63,6 +65,8 @@ This allows you to:
 - **Push** images to `quay.io`
 - **Pull** the RHEL bootc image builder from `registry.redhat.io`
 
+Login to [Red Hat Cloud Console](https://console.redhat.com/openshift/install/pull-secret) to retrieve the Pull Secret needed for Microshift and save it to a file named **pull-secret.json**.
+
 ---
 
 ## Step 2 – Build & Push the Container Image
@@ -70,8 +74,6 @@ This allows you to:
 Build your local bootc image and push it to your registry. This image will be embedded inside the ISO.
 
 ```bash
-source vars.env
-
 sudo podman build -t "${IMAGE_REF}" --authfile auth.json .
 sudo podman push "${IMAGE_REF}" --authfile auth.json
 ```
@@ -83,8 +85,6 @@ sudo podman push "${IMAGE_REF}" --authfile auth.json
 Generate the `config.toml` file used by bootc image builder. This injects your image reference, registry auth, and OpenShift pull secret into the ISO installer.
 
 ```bash
-source vars.env
-
 cat > config.toml <<EOF
 [customizations.installer.kickstart]
 contents = """
@@ -139,8 +139,6 @@ EOF
 Run the bootc image builder container to produce an ISO that embeds your image.
 
 ```bash
-source vars.env
-
 sudo podman run \
   --rm \
   -it \
@@ -165,9 +163,6 @@ Output will be written to `./output/bootiso/install.iso`.
 Give the ISO a descriptive name and copy it into the libvirt image store.
 
 ```bash
-ARCH=$(uname -m)
-ISO_NAME="rhel-9.6-${ARCH}-boot.iso"
-
 mv ./output/bootiso/install.iso "./output/bootiso/${ISO_NAME}"
 sudo cp "./output/bootiso/${ISO_NAME}" "/var/lib/libvirt/images/${ISO_NAME}"
 ```
@@ -179,11 +174,6 @@ sudo cp "./output/bootiso/${ISO_NAME}" "/var/lib/libvirt/images/${ISO_NAME}"
 Boot and install a VM from the ISO using `virt-install`. The Kickstart config handles the installation automatically.
 
 ```bash
-source vars.env
-
-ARCH=$(uname -m)
-ISO_PATH="/var/lib/libvirt/images/rhel-9.6-${ARCH}-boot.iso"
-
 sudo virt-install \
     --name "${VMNAME}" \
     --vcpus 2 \
