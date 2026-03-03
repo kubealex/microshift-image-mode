@@ -52,6 +52,12 @@ WantedBy=multi-user.target
 EOF
 
 # ------------------------------------------------------------
+# Add MTU configuration for OCP Virt
+# ------------------------------------------------------------
+
+COPY files/ovn.yaml /etc/microshift/ovn.yaml
+
+# ------------------------------------------------------------
 # Enable and mask systemd units
 # ------------------------------------------------------------
 RUN systemctl enable microshift-make-rshared.service && \
